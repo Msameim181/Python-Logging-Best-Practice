@@ -1,6 +1,6 @@
 import logging
 
-from loghunter import LoggingConfig
+from chromatrace import LoggingConfig
 
 
 class Sample:

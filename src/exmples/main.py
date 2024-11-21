@@ -3,7 +3,7 @@ import sys
 import injection  # noqa
 from dependency import container
 from example_service import ExampleService
-from loghunter import LoggingConfig, LoggingSettings, tracer
+from chromatrace import LoggingConfig, LoggingSettings, tracer
 from api_app import APIService
 from sample import Sample
 import asyncio

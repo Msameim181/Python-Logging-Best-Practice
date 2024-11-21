@@ -1,6 +1,6 @@
-# Loghunter
+# Chromatrace
 
-Loghunter is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
+Chromatrace is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
 
 ## Features
 
@@ -11,18 +11,18 @@ Loghunter is a Python package designed for advanced logging capabilities, includ
 
 ## Installation
 
-You can install Loghunter via pip:
+You can install Chromatrace via pip:
 
 ```bash
-pip install loghunter
+pip install chromatrace
 ```
 
 ## Usage
 
-To use Loghunter in your application, you can import the necessary components:
+To use Chromatrace in your application, you can import the necessary components:
 
 ```python
-from loghunter import LoggingSettings, LoggingConfig, tracer
+from chromatrace import LoggingSettings, LoggingConfig, tracer
 ```
 
 Configure your logging settings:

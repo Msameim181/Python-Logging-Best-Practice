@@ -1,5 +1,5 @@
 from dependency import container
-from loghunter import LoggingConfig, LoggingSettings
+from chromatrace import LoggingConfig, LoggingSettings
 
 container[LoggingSettings] = LoggingSettings()
 container[LoggingConfig] = LoggingConfig(

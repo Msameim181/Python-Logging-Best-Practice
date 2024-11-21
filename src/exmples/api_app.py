@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
-from loghunter import LoggingConfig, RequestIdContext, trace_id_ctx
+from chromatrace import LoggingConfig, RequestIdContext, trace_id_ctx
 from example_service import ExampleService
 
 
