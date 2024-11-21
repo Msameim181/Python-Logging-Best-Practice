@@ -1,6 +1,6 @@
-tracelog
+loghunter
 ├── src
-│   └── tracelog
+│   └── loghunter
 │       ├── __init__.py
 │       ├── logging_config.py
 │       ├── logging_settings.py

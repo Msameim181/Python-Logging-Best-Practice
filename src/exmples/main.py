@@ -5,7 +5,7 @@ from dependency import container
 from example_service import ExampleService
 from logging_config import LoggingConfig
 from logging_settings import LoggingSettings
-from tracelog.src.exmples.api_app import APIService
+from loghunter.src.exmples.api_app import APIService
 from sample import Sample
 import asyncio
 from tracer import tracer

@@ -3,7 +3,7 @@ include README.md
 include pyproject.toml
 include setup.cfg
 
-recursive-include src/tracelog *.py
+recursive-include src/loghunter *.py
 recursive-include docs *.md *.rst *.txt
 
 recursive-exclude tests *.py

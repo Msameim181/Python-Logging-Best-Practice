@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tracelog"
+name = "loghunter"
 version = "0.1.0"
 description = "Advanced Python logging with tracing, coloring and FastAPI integration"
 readme = "README.md"
@@ -33,4 +33,4 @@ Repository = "https://github.com/Msameim181/Python-Logging-Best-Practice.git"
 Issues = "https://github.com/Msameim181/Python-Logging-Best-Practice/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/tracelog"]
+packages = ["src/loghunter"]

@@ -1,6 +1,6 @@
-# TraceLog
+# Loghunter
 
-TraceLog is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
+Loghunter is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
 
 ## Features
 
@@ -11,18 +11,18 @@ TraceLog is a Python package designed for advanced logging capabilities, includi
 
 ## Installation
 
-You can install TraceLog via pip:
+You can install Loghunter via pip:
 
 ```bash
-pip install tracelog
+pip install loghunter
 ```
 
 ## Usage
 
-To use TraceLog in your application, you can import the necessary components:
+To use Loghunter in your application, you can import the necessary components:
 
 ```python
-from tracelog import LoggingSettings, LoggingConfig, tracer
+from loghunter import LoggingSettings, LoggingConfig, tracer
 ```
 
 Configure your logging settings:
