@@ -1,7 +1,6 @@
 import logging
 
-from logging_config import LoggingConfig
-from tracer import tracer
+from loghunter import LoggingConfig
 
 
 class SecondService:

@@ -1,6 +1,6 @@
 import logging
 
-from logging_config import LoggingConfig
+from loghunter import LoggingConfig
 
 
 class Sample:

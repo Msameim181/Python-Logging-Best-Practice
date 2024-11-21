@@ -1,6 +1,5 @@
 from dependency import container
-from logging_config import LoggingConfig
-from logging_settings import LoggingSettings
+from loghunter import LoggingConfig, LoggingSettings
 
 container[LoggingSettings] = LoggingSettings()
 container[LoggingConfig] = LoggingConfig(
