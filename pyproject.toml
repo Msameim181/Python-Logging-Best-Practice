@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tracelog"
+version = "0.1.0"
+description = "Advanced Python logging with tracing, coloring and FastAPI integration"
+readme = "README.md"
+authors = [
+    { name = "Mohammad Mahdi Samei", email = "9259samei@gmail.com" }
+]
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Logging",
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "asyncio==3.4.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/Msameim181/Python-Logging-Best-Practice"
+Documentation = "https://github.com/Msameim181/Python-Logging-Best-Practice#readme"
+Repository = "https://github.com/Msameim181/Python-Logging-Best-Practice.git"
+Issues = "https://github.com/Msameim181/Python-Logging-Best-Practice/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tracelog"]
