@@ -1,7 +1,9 @@
 import logging
-from pydantic import BaseModel
 from pathlib import Path
 from typing import Optional
+
+from pydantic import BaseModel
+
 
 class LoggingSettings(BaseModel):
     log_level: str = "INFO"

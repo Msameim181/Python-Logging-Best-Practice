@@ -1,4 +1,5 @@
 from dependency import container
+
 from chromatrace import LoggingConfig, LoggingSettings
 
 container[LoggingSettings] = LoggingSettings()

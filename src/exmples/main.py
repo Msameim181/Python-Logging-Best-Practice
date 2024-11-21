@@ -1,12 +1,13 @@
+import asyncio
 import sys
 
 import injection  # noqa
+from api_app import APIService
 from dependency import container
 from example_service import ExampleService
-from chromatrace import LoggingConfig, LoggingSettings, tracer
-from api_app import APIService
 from sample import Sample
-import asyncio
+
+from chromatrace import LoggingConfig, LoggingSettings, tracer
 
 sys.stdout.reconfigure(encoding='utf-8')
 app = container[APIService].app

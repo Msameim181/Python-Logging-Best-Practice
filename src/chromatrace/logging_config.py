@@ -1,16 +1,12 @@
 import logging
 import logging.handlers
 import queue
-
-from .logging_settings import (
-    ColoredFormatter, 
-    LoggingSettings, 
-    SysLogFormatter, 
-    ApplicationLevelFilter, 
-    IgnoreNANTraceFormatter
-)
-from .tracer import RequestIdFilter
 import socket
+
+from .logging_settings import (ApplicationLevelFilter, ColoredFormatter,
+                               IgnoreNANTraceFormatter, LoggingSettings,
+                               SysLogFormatter)
+from .tracer import RequestIdFilter
 
 
 class LoggingConfig:

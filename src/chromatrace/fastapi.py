@@ -1,5 +1,6 @@
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
+
 from .tracer import RequestIdContext, trace_id_ctx
 
 

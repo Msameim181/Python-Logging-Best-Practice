@@ -1,9 +1,9 @@
-import functools
+import asyncio
 import contextvars
+import functools
+import logging
 import uuid
 from typing import Optional
-import logging
-import asyncio
 
 trace_id_ctx = contextvars.ContextVar("trace_id", default=None)
 
