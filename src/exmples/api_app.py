@@ -1,9 +1,9 @@
 import uvicorn
-from chromatrace import LoggingConfig, RequestIdMiddleware
+from example_service import ExampleService
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from example_service import ExampleService
+from chromatrace import LoggingConfig, RequestIdMiddleware
 
 
 class APIService:
