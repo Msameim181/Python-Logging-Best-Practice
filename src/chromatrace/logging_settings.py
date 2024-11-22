@@ -16,6 +16,13 @@ class LoggingSettings(BaseModel):
     syslog_host: Optional[str] = None
     syslog_port: Optional[int] = None
 
+    def __init__(self, **data):
+        super().__init__(**data)
+        if isinstance(self.file_path, str):
+            self.file_path = Path(self.file_path)
+        if isinstance(self.file_path, Path):
+            self.file_path.mkdir(parents=True, exist_ok=True)
+
 
 class ColoredFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None, style="%"):
@@ -39,6 +46,7 @@ class ColoredFormatter(logging.Formatter):
         record.name = self._name_color_format.format(record.name)
         return super(ColoredFormatter, self).format(record) + self.splitter
 
+
 class IgnoreNANTraceFormatter(ColoredFormatter):
     def format(self, record):
         try:
@@ -46,6 +54,7 @@ class IgnoreNANTraceFormatter(ColoredFormatter):
             return message.replace("[NAN]-", "")
         except Exception:
             return record.getMessage()
+
 
 class SysLogFormatter(ColoredFormatter):
     def format(self, record):
@@ -64,6 +73,3 @@ class ApplicationLevelFilter(logging.Filter):
     def filter(self, record):
         record.application_level = self.application_level
         return True
-
-
-
