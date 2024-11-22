@@ -2,6 +2,9 @@
 
 Chromatrace is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
 
+I believe that logging is an essential part of any application, and it is crucial to have a well-organized and structured logging system. Chromatrace aims to provide a simple and easy-to-use logging system that can be integrated into any Python application.
+In simple terms, Chromatrace is a Best Practice of Logging in Python.
+
 ## Features
 
 - Configurable logging settings using Pydantic.
