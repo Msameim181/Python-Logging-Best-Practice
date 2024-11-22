@@ -1,8 +1,10 @@
-from dependency import container
-
 from chromatrace import LoggingConfig, LoggingSettings
 
-container[LoggingSettings] = LoggingSettings()
+from dependency import container
+
+container[LoggingSettings] = LoggingSettings(
+    file_path="app.log"
+)
 container[LoggingConfig] = LoggingConfig(
     container[LoggingSettings], 
     application_level='Development', 

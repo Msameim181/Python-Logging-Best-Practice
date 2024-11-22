@@ -3,10 +3,10 @@ import logging
 from chromatrace import LoggingConfig
 
 
-class SecondService:
+class InnerService:
     def __init__(self, logging_config: LoggingConfig):
         self.logger = logging_config.get_logger(self.__class__.__name__)
-        self.logger.setLevel(logging.ERROR)
+        self.logger.setLevel(logging.INFO)
     
     async def do_something(self):
         self.logger.debug("Check something in second service")
@@ -15,7 +15,7 @@ class SecondService:
 
 
 class ExampleService:
-    def __init__(self, logging_config: LoggingConfig, second_service: SecondService):
+    def __init__(self, logging_config: LoggingConfig, second_service: InnerService):
         self.logger = logging_config.get_logger(self.__class__.__name__)
         self.second_service = second_service
         self.logger.setLevel(logging.ERROR)

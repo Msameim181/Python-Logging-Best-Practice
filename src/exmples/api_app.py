@@ -1,9 +1,9 @@
-from example_service import ExampleService
-from fastapi import FastAPI, Request
+import uvicorn
+from chromatrace import LoggingConfig, RequestIdMiddleware
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 
-from chromatrace import LoggingConfig, RequestIdContext, trace_id_ctx
+from example_service import ExampleService
 
 
 class APIService:
@@ -19,15 +19,6 @@ class APIService:
             allow_methods=["*"],  # Allows all methods
             allow_headers=["*"],  # Allows all headers
         )
-
-        class RequestIdMiddleware(BaseHTTPMiddleware):
-            async def dispatch(self, request: Request, call_next):
-                request_id = request.headers.get("X-Request-ID")
-                with RequestIdContext(request_id):
-                    response = await call_next(request)
-                    response.headers["X-Request-ID"] = trace_id_ctx.get()
-                    return response
-
         self.app.add_middleware(RequestIdMiddleware)
         self.do_something()
         self.routes()
@@ -38,7 +29,7 @@ class APIService:
         self.logger.error("Something went wrong in API service")
 
     def run(self):
-        import uvicorn
+        
         uvicorn.run(self.app, host="0.0.0.0", port=8000,)
 
     def routes(self):

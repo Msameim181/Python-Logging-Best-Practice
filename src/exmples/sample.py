@@ -3,7 +3,7 @@ import logging
 from chromatrace import LoggingConfig
 
 
-class Sample:
+class AnotherSample:
     def __init__(self, logging_config: LoggingConfig):
         self.logger = logging_config.get_logger(self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
