@@ -21,7 +21,7 @@ class LoggingSettings(BaseModel):
         if isinstance(self.file_path, str):
             self.file_path = Path(self.file_path)
         if isinstance(self.file_path, Path):
-            self.file_path.mkdir(parents=True, exist_ok=True)
+            self.file_path.parent.mkdir(parents=True, exist_ok=True)
 
 
 class ColoredFormatter(logging.Formatter):
