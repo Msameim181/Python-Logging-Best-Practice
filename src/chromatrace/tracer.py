@@ -7,6 +7,7 @@ from typing import Optional
 
 trace_id_ctx = contextvars.ContextVar("trace_id", default=None)
 
+
 class TraceContext:
     def __init__(self, trace_id: Optional[str] = None):
         self.trace_id = trace_id or f"T-{str(uuid.uuid4())[:8]}"
@@ -15,7 +16,7 @@ class TraceContext:
     def __enter__(self):
         self.token = trace_id_ctx.set(self.trace_id)
         return self
-    
+
     def __exit__(self, *args):
         trace_id_ctx.reset(self.token)
 
@@ -25,6 +26,7 @@ class TraceContext:
 
     async def __aexit__(self, *args):
         trace_id_ctx.reset(self.token)
+
 
 def tracer(func):
     @functools.wraps(func)
@@ -40,6 +42,11 @@ def tracer(func):
     if asyncio.iscoroutinefunction(func):
         return async_wrapper
     return sync_wrapper
+
+
+def get_trace_id():
+    return trace_id_ctx.get() or "NAN"
+
 
 class RequestIdContext:
     def __init__(self, request_id: Optional[str] = None):
