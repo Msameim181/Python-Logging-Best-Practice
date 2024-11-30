@@ -19,7 +19,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Logging",
-    "Topic :: System :: Tracing Issues",
 ]
 dependencies = [
     "pydantic>=2.0.0",
