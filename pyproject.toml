@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "chromatrace"
-version = "0.1.4"
+version = "0.1.5"
 description = "Advanced Python logging with tracing, coloring and FastAPI integration"
 readme = "README.md"
 authors = [
@@ -13,13 +13,13 @@ authors = [
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Logging",
+    "Topic :: System :: Tracing Issues",
 ]
 dependencies = [
     "pydantic>=2.0.0",
