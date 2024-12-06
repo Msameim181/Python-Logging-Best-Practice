@@ -20,6 +20,9 @@ class LoggingSettings(BaseModel):
     enable_file_logging: bool = False
     enable_tracing: bool = True
     ignore_nan_trace: bool = True
+    use_console_colored_formatter: bool = True
+    use_syslog_colored_formatter: bool = False
+    use_file_colored_formatter: bool = False
 
     def __init__(self, **data):
         super().__init__(**data)
