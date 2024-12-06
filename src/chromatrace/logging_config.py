@@ -8,6 +8,8 @@ from .logging_settings import (
     ColoredFormatter,
     IgnoreNANTraceFormatter,
     LoggingSettings,
+    PlainFormatter,
+    PlainSysLogFormatter,
     SysLogFormatter,
 )
 from .tracer import RequestIdFilter
@@ -57,16 +59,20 @@ class LoggingConfig:
             handler.addFilter(self.application_level_filter)
         logger.addHandler(handler)
 
-    def _setup_console_handler(
-        self, logger: logging.Logger, formatter: logging.Formatter
-    ):
+    def _setup_console_handler(self, logger: logging.Logger):
+        formatter = self._get_formatter(
+            colored=self.settings.use_console_colored_formatter
+        )
         if self.settings.enable_console_logging:
             console_handler = logging.StreamHandler()
             self._set_logger_settings(console_handler, formatter, logger)
             return console_handler
         return
 
-    def _setup_file_handler(self, logger: logging.Logger, formatter: logging.Formatter):
+    def _setup_file_handler(self, logger: logging.Logger):
+        formatter = self._get_formatter(
+            colored=self.settings.use_file_colored_formatter
+        )
         if self.settings.enable_file_logging:
             file_handler = logging.handlers.RotatingFileHandler(
                 filename=str(self.settings.file_path),
@@ -78,18 +84,23 @@ class LoggingConfig:
             return file_handler
         return
 
-    def _setup_syslog_handler(
-        self, logger: logging.Logger, formatter: logging.Formatter
-    ):
+    def _setup_syslog_handler(self, logger: logging.Logger):
         if not self.settings.syslog_host or not self.settings.syslog_port:
             return
 
         try:
-            syslog_formatter = SysLogFormatter(
-                fmt=self.settings.log_format,
-                datefmt=self.settings.date_format,
-                style=self.settings.style,
-            )
+            if self.settings.use_syslog_colored_formatter:
+                syslog_formatter = SysLogFormatter(
+                    fmt=self.settings.log_format,
+                    datefmt=self.settings.date_format,
+                    style=self.settings.style,
+                )
+            else:
+                syslog_formatter = PlainSysLogFormatter(
+                    fmt=self.settings.log_format,
+                    datefmt=self.settings.date_format,
+                    style=self.settings.style,
+                )
 
             # Create handler with socket handling
             syslog_handler = logging.handlers.SysLogHandler(
@@ -107,36 +118,46 @@ class LoggingConfig:
 
         except (socket.error, OSError) as e:
             # Fallback to console logging if syslog fails
+            formatter = self._get_formatter(
+                colored=self.settings.use_console_colored_formatter
+            )
             console = logging.StreamHandler()
             console.setFormatter(formatter)
             logger.addHandler(console)
             logger.warning(f"Failed to setup syslog handler: {str(e)}")
             print(f"Failed to setup syslog handler: {str(e)}")
 
-    def _setup_handlers(self, logger: logging.Logger):
-        formatter = ColoredFormatter(
-            fmt=self.settings.log_format,
-            datefmt=self.settings.date_format,
-            style=self.settings.style,
-        )
-        if self.settings.enable_tracing and self.settings.ignore_nan_trace:
-            formatter = IgnoreNANTraceFormatter(
+    def _get_formatter(self, colored: bool = False):
+        if colored and self.settings.enable_tracing and self.settings.ignore_nan_trace:
+            return IgnoreNANTraceFormatter(
                 fmt=self.settings.log_format,
                 datefmt=self.settings.date_format,
                 style=self.settings.style,
             )
+        elif colored:
+            return ColoredFormatter(
+                fmt=self.settings.log_format,
+                datefmt=self.settings.date_format,
+                style=self.settings.style,
+            )
+        return PlainFormatter(
+            fmt=self.settings.log_format,
+            datefmt=self.settings.date_format,
+            style=self.settings.style,
+        )
 
+    def _setup_handlers(self, logger: logging.Logger):
         # Queue handler
         log_queue = queue.Queue()
 
         # Console handler
-        console_handler = self._setup_console_handler(logger, formatter)
+        console_handler = self._setup_console_handler(logger)
 
         # File handler with rotation
-        file_handler = self._setup_file_handler(logger, formatter)
+        file_handler = self._setup_file_handler(logger)
 
         # Setup syslog with error handling
-        syslog_handler = self._setup_syslog_handler(logger, formatter)
+        syslog_handler = self._setup_syslog_handler(logger)
 
         # Queue listener
         handlers = [console_handler, file_handler, syslog_handler]
