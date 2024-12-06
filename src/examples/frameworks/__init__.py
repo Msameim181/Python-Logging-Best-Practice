@@ -1,2 +1,2 @@
-from .api_app import APIService
-from .socket_app import SocketServerConfig, SocketService
+from .api_app import APIService  # noqa
+from .socket_app import SocketServerConfig, SocketService  # noqa

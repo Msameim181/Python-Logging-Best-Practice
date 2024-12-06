@@ -1,2 +1,2 @@
-from .example_service import ExampleService
-from .sample import AnotherSample
+from .example_service import ExampleService  # noqa
+from .sample import AnotherSample  # noqa
