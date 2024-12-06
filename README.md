@@ -9,7 +9,7 @@
 
 [![PyPi Version](https://img.shields.io/pypi/v/chromatrace.svg)](https://pypi.python.org/pypi/chromatrace/)
 [![PyPi Version Alt](https://badge.fury.io/py/chromatrace.svg)](https://pypi.python.org/pypi/chromatrace/)  
-![PyPI Downloads](https://static.pepy.tech/badge/chromatrace)
+[![PyPI Downloads](https://static.pepy.tech/badge/chromatrace)](https://pepy.tech/projects/chromatrace)
 [![Python Versions](https://img.shields.io/pypi/pyversions/chromatrace.svg)]()
 
 
