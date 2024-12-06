@@ -1,6 +1,9 @@
-import pika
 from contextlib import contextmanager
+
+import pika
+
 from .tracer import RequestIdContext, trace_id_ctx
+
 
 @contextmanager
 def rabbitmq_trace_context(channel, properties):
