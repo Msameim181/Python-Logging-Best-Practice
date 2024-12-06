@@ -64,16 +64,46 @@ class ColoredFormatter(logging.Formatter):
         return super(ColoredFormatter, self).format(record) + self.splitter
 
 
+class PlainFormatter(logging.Formatter):
+    def __init__(self, fmt=None, datefmt=None, style="%"):
+        super().__init__(fmt, datefmt, style)
+        self.splitter = "\n"  # To add a newline after each log message
+
+    def format(self, record):
+        # clear all color codes and msg bold
+        record.msg = record.msg.replace("\033[1m", "").replace("\033[0m", "")
+        record.levelname = (
+            record.levelname.replace("\033[94m", "")
+            .replace("\033[92m", "")
+            .replace("\033[93m", "")
+            .replace("\033[91m", "")
+            .replace("\033[95m", "")
+            .replace("\033[0m", "")
+        )
+        record.name = record.name.replace("\033[90m", "").replace("\033[0m", "")
+        return super(PlainFormatter, self).format(record) + self.splitter
+
+
 class IgnoreNANTraceFormatter(ColoredFormatter):
     def format(self, record):
         try:
             message = super().format(record)
+            message = message.replace("[\033[96mNAN\033[0m]-", "")
             return message.replace("[NAN]-", "")
         except Exception:
             return record.getMessage()
 
 
 class SysLogFormatter(ColoredFormatter):
+    def format(self, record):
+        try:
+            message = super().format(record)
+            return message.replace("\n", " | ")
+        except Exception:
+            return record.getMessage()
+
+
+class PlainSysLogFormatter(PlainFormatter):
     def format(self, record):
         try:
             message = super().format(record)
