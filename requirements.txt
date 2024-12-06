@@ -1,0 +1,16 @@
+asyncio==3.4.3
+django==5.1.1
+lagom==2.6.0
+pydantic==2.9.2
+fastapi==0.100.0
+socketio==0.2.1
+python-socketio==5.11.4
+python-socketio[client]==5.11.4
+pytest==8.3.3
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+uvicorn[standard]==0.30.6
+uvicorn-worker==0.2.0
+python-multipart==0.0.10
+httpx==0.27.2
+chromatrace==0.1.5
