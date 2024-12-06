@@ -49,8 +49,9 @@ def get_trace_id():
 
 
 class RequestIdContext:
-    def __init__(self, request_id: Optional[str] = None):
-        self.request_id = request_id or f"R-{str(uuid.uuid4())[:8]}"
+    def __init__(self, request_id: Optional[str] = None, prefix: str = "R-"):
+        self.request_id = request_id or str(uuid.uuid4())[:8]
+        self.request_id = f"{prefix}{self.request_id}"
         self.token = None
 
     def __enter__(self):
