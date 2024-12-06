@@ -32,6 +32,10 @@ jobs:
     - name: Lint with ruff
       run: |
         ruff check .
+
+    - name: Test with pytest
+      run: |
+        pytest --cov
     
     - name: Build package
       run: python -m build
