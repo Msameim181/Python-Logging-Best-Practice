@@ -1,13 +1,11 @@
 import multiprocessing
 
 import uvicorn
+from chromatrace import LoggingConfig
+from chromatrace.fastapi import RequestIdMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.chromatrace import LoggingConfig
-from src.chromatrace.fastapi import RequestIdMiddleware
-
-from .example_service import ExampleService
-from .sample import AnotherSample
+from usecases import AnotherSample, ExampleService
 
 
 class APIService:

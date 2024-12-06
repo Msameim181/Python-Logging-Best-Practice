@@ -1,6 +1,6 @@
 import logging
 
-from src.chromatrace import LoggingConfig
+from chromatrace import LoggingConfig
 
 
 class InnerService:

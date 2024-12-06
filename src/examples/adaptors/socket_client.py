@@ -6,12 +6,14 @@ import time
 from typing import Dict, List, Optional
 
 import socketio
+from chromatrace import LoggingConfig, LoggingSettings
+from chromatrace.tracer import trace_id_ctx
 from pydantic import BaseModel, Field
-from src.chromatrace import LoggingConfig, LoggingSettings
-from src.chromatrace.tracer import trace_id_ctx
 
 logging_config = LoggingConfig(
-    LoggingSettings(enable_tracing=True, file_path="app-client.log")
+    LoggingSettings(
+        enable_tracing=True, file_path="./log/app-client.log", enable_file_logging=True
+    )
 )
 trace_id = "123456"
 trace_id_ctx.set(f"C-{trace_id}")

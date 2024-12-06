@@ -3,7 +3,7 @@ import multiprocessing
 
 import socketio
 import uvicorn
-from src.chromatrace import LoggingConfig, SocketRequestIdMiddleware
+from chromatrace import LoggingConfig, SocketRequestIdMiddleware
 
 
 class SocketServerConfig:
@@ -53,7 +53,7 @@ class SocketService:
                 self.socket_application,
                 host="0.0.0.0",
                 port=8001,
-                log_level="info",
+                log_level="warning",
             )
         else:
             self.rest_api_process = multiprocessing.Process(
@@ -62,7 +62,7 @@ class SocketService:
                     "app": self.socket_application,
                     "host": "0.0.0.0",
                     "port": 8001,
-                    "log_level": "info",
+                    "log_level": "warning",
                 },
             ).start()
 

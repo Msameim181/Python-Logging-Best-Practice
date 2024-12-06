@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from src.chromatrace import LoggingConfig, get_trace_id
+from chromatrace import LoggingConfig, get_trace_id
 
 
 class AnotherSample:
