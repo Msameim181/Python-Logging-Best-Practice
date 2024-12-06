@@ -46,6 +46,7 @@ class ColoredFormatter(logging.Formatter):
         }
         self._message_color_format = "\033[1m{}\033[0m"  # Bold
         self._name_color_format = "\033[90m{}\033[0m"  # Gray
+        self._trace_id_color_format = "\033[96m{}\033[0m"  # Cyan
         self.splitter = "\n"  # To add a newline after each log message
 
     def format(self, record):
@@ -54,6 +55,9 @@ class ColoredFormatter(logging.Formatter):
         )
         record.msg = self._message_color_format.format(record.msg)
         record.name = self._name_color_format.format(record.name)
+        record.trace_id = self._trace_id_color_format.format(
+            getattr(record, "trace_id", "NAN")
+        )
         return super(ColoredFormatter, self).format(record) + self.splitter
 
 
