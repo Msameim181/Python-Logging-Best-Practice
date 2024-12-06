@@ -173,7 +173,7 @@ from chromatrace import SocketRequestIdMiddleware
 
 socket_application = SocketRequestIdMiddleware(socket_application)
 ```
-The full example can be found in the [socket_app.py](src/examples/socket_app.py) file. I recommend you to check it out before making any decision. The client-side code can be found in the [socket_client.py](src/examples/socket_client.py) file.
+The full example can be found in the [socket_app.py](src/examples/frameworks/socket_app.py) file. I recommend you to check it out before making any decision. The client-side code can be found in the [socket_client.py](src/examples/adaptors/socket_client.py) file.
 
 Result:
 ```log
@@ -215,7 +215,7 @@ Also, the socket server will start and wait for the client to connect on `http:/
 For socket client-side run the following command in another terminal:
 
 ```bash
-python socket_client.py
+python adaptors/socket_client.py
 ```
 
 Now, check the logs in the both terminal.
