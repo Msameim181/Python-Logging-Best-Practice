@@ -10,23 +10,15 @@ from .tracer import RequestIdFilter
 
 
 class LoggingConfig:
-    def __init__(
-            self, 
-            settings: LoggingSettings, 
-            application_level: str = '', 
-            enable_tracing: bool = True,
-            ignore_nan_trace: bool = False):
+    def __init__(self, settings: LoggingSettings):
         self.settings = settings
         self._configured = False
-        self.request_id_filter = RequestIdFilter()
-        self.application_level = application_level
-        if self.application_level:
-            self.application_level_filter = ApplicationLevelFilter(self.application_level)
-            self.settings.log_format = '[%(application_level)s]-' + self.settings.log_format
-        self.enable_tracing = enable_tracing
-        if self.enable_tracing:
-            self.settings.log_format = '[%(trace_id)s]-' + self.settings.log_format
-        self.ignore_nan_trace = ignore_nan_trace
+        if self.settings.enable_tracing:
+            self.request_id_filter = RequestIdFilter()
+        if self.settings.application_level:
+            self.application_level_filter = ApplicationLevelFilter(
+                self.settings.application_level
+            )
 
     def configure(self):
         if self._configured:
