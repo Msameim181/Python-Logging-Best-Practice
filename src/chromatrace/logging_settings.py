@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class LoggingSettings(BaseModel):
+    application_level: str = ""
     log_level: str = "INFO"
     log_format: str = "(%(asctime)s)-[%(levelname)s]-[%(name)s]-FILENAME:%(filename)s-FUNC:%(funcName)s-THREAD:%(threadName)s-LINE:%(lineno)d :: \n%(message)s"
     date_format: str = "%Y-%m-%d %H:%M:%S"
@@ -15,13 +16,22 @@ class LoggingSettings(BaseModel):
     backup_count: int = 3  # 3 days retention
     syslog_host: Optional[str] = None
     syslog_port: Optional[int] = None
+    enable_console_logging: bool = True
+    enable_file_logging: bool = False
+    enable_tracing: bool = True
+    ignore_nan_trace: bool = True
 
     def __init__(self, **data):
         super().__init__(**data)
-        if isinstance(self.file_path, str):
-            self.file_path = Path(self.file_path)
-        if isinstance(self.file_path, Path):
-            self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        if self.enable_file_logging:
+            if isinstance(self.file_path, str):
+                self.file_path = Path(self.file_path)
+            if isinstance(self.file_path, Path):
+                self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        if self.application_level:
+            self.log_format = "[%(application_level)s]-" + self.log_format
+        if self.enable_tracing:
+            self.log_format = "[%(trace_id)s]-" + self.log_format
 
 
 class ColoredFormatter(logging.Formatter):
