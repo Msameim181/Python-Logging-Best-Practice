@@ -45,7 +45,9 @@ def tracer(func):
 
 
 def get_trace_id():
-    return trace_id_ctx.get() or "NAN"
+    trace_id = trace_id_ctx.get() or "NAN"
+    trace_id = trace_id.replace("T-", "").replace("R-", "").replace("S-", "")
+    return trace_id
 
 
 class RequestIdContext:
