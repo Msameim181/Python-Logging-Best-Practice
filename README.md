@@ -46,10 +46,12 @@ Configure your logging settings:
 
 ```python
 logging_config = LoggingConfig(
-    settings=LoggingSettings(), 
-    application_level='Development', 
-    enable_tracing=True, 
-    ignore_nan_trace=True
+    settings=LoggingSettings(
+        application_level="Development",
+        enable_tracing=True,
+        ignore_nan_trace=False,
+        enable_file_logging=True,
+    )
 )
 logger = logging_config.get_logger(__name__)
 ```
