@@ -2,9 +2,9 @@ name: Test and Tag and Publish
 
 on:
   push:
-    branches: [ main, development ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, development ]
+    branches: [ main, develop ]
   release:
     types: [created]
 
@@ -44,7 +44,7 @@ jobs:
   create-tag:
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     
     steps:
     - uses: actions/checkout@v3
