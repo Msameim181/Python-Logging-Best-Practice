@@ -3,7 +3,12 @@ import multiprocessing
 
 import socketio
 import uvicorn
-from chromatrace import LoggingConfig, SocketRequestIdMiddleware
+from chromatrace import (
+    GetLoggingConfig,
+    LoggingConfig,
+    SocketRequestIdMiddleware,
+    UvicornLoggingSettings,
+)
 
 
 class SocketServerConfig:
@@ -53,7 +58,13 @@ class SocketService:
                 self.socket_application,
                 host="0.0.0.0",
                 port=8001,
-                log_level="warning",
+                log_level="info",
+                log_config=GetLoggingConfig(
+                    UvicornLoggingSettings(
+                        enable_file_logging=True,
+                        show_process_id=True,
+                    )
+                ),
             )
         else:
             self.rest_api_process = multiprocessing.Process(
@@ -62,7 +73,13 @@ class SocketService:
                     "app": self.socket_application,
                     "host": "0.0.0.0",
                     "port": 8001,
-                    "log_level": "warning",
+                    "log_level": "info",
+                    "log_config": GetLoggingConfig(
+                        UvicornLoggingSettings(
+                            enable_file_logging=True,
+                            show_process_id=True,
+                        )
+                    ),
                 },
             ).start()
 
