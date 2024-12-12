@@ -9,3 +9,4 @@ from .tracer import (  # noqa
     trace_id_ctx,
     tracer,
 )
+from .uvicorn import GetLoggingConfig, UvicornLoggingSettings  # noqa: F401
