@@ -3,6 +3,7 @@ import multiprocessing
 import uvicorn
 from chromatrace import LoggingConfig
 from chromatrace.fastapi import RequestIdMiddleware
+from chromatrace.uvicorn import GetLoggingConfig, UvicornLoggingSettings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from usecases import AnotherSample, ExampleService
@@ -46,7 +47,13 @@ class APIService:
                 self.rest_application,  # could be "main:api_app" for worker, auto reload
                 host="0.0.0.0",
                 port=8000,
-                log_level="info",
+                log_level="debug",
+                log_config=GetLoggingConfig(
+                    UvicornLoggingSettings(
+                        enable_file_logging=True,
+                        show_process_id=True,
+                    )
+                ),
                 # factory=True, # if using "main:api_app" will required
             )
         else:
@@ -57,6 +64,12 @@ class APIService:
                     "host": "0.0.0.0",
                     "port": 8000,
                     "log_level": "info",
+                    "log_config": GetLoggingConfig(
+                        UvicornLoggingSettings(
+                            enable_file_logging=True,
+                            show_process_id=True,
+                        )
+                    ),
                     # "factory": True,  # if using "main:api_app" will required
                 },
             ).start()
@@ -64,9 +77,18 @@ class APIService:
     def routes(self):
         @self.rest_application.get("/")
         async def read_root():
-            self.logger.info("Hello World")
+            self.logger.info("Hello World, Arg1: %s, Arg2: %s", "arg1", "arg2")
             await self.example_service.do_something()
             return {"message": "Hello World"}
+
+        @self.rest_application.post("/post_req")
+        async def post_req(data: dict):
+            return {"message": "received"}
+
+        @self.rest_application.post("/post_req_2")
+        async def post_req_2():
+            raise Exception("Error occurred")
+            return {"message": "received"}
 
         @self.rest_application.get("/consume")
         async def consume():
