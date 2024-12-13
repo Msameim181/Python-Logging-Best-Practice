@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "chromatrace"
-version = "0.2.9"
+version = "0.2.11"
 description = "Advanced Python logging with tracing, coloring and FastAPI, Django, and SocketIO integrations"
 readme = "README.md"
 authors = [
