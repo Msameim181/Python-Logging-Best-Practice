@@ -44,81 +44,98 @@ class LoggingSettings(BaseModel):
             )
 
 
+class BasicFormatter(logging.Formatter):
+    TRACE_LOG_LEVEL = 5
+    _level_color_format = {
+        TRACE_LOG_LEVEL: lambda level_name: click.style(
+            str(level_name), fg="bright_blue"
+        ),
+        logging.DEBUG: lambda level_name: click.style(str(level_name), fg="blue"),
+        logging.INFO: lambda level_name: click.style(str(level_name), fg="green"),
+        logging.WARNING: lambda level_name: click.style(str(level_name), fg="yellow"),
+        logging.ERROR: lambda level_name: click.style(str(level_name), fg="red"),
+        logging.CRITICAL: lambda level_name: click.style(str(level_name), fg="magenta"),
+    }
 
-
-class ColoredFormatter(logging.Formatter):
-    def __init__(self, fmt=None, datefmt=None, style="%"):
+    def __init__(
+        self,
+        fmt: str | None = None,
+        datefmt: str | None = None,
+        style: Literal["%", "{", "$"] = "%",
+        colored: bool | None = False,
+        message_splitter: str | None = "\n",
+        log_splitter: str | None = "\n",
+        remove_nan_trace: bool | None = False,
+    ):
         super().__init__(fmt, datefmt, style)
-        self._level_color_format = {
-            logging.DEBUG: "\033[94m{}\033[0m",  # Blue
-            logging.INFO: "\033[92m{}\033[0m",  # Green
-            logging.WARNING: "\033[93m{}\033[0m",  # Yellow
-            logging.ERROR: "\033[91m{}\033[0m",  # Red
-            logging.CRITICAL: "\033[95m{}\033[0m",  # Magenta
-        }
-        self._message_color_format = "\033[1m{}\033[0m"  # Bold
-        self._name_color_format = "\033[90m{}\033[0m"  # Gray
-        self._trace_id_color_format = "\033[96m{}\033[0m"  # Cyan
-        self.splitter = "\n"  # To add a newline after each log message
+        self.log_splitter = (
+            log_splitter or ""
+        )  # To add a newline after each log message
+        self.message_splitter = (
+            message_splitter or ""
+        )  # To add a newline before each message and the log details
+        self.colored = colored
+        self.remove_nan_trace = remove_nan_trace
+
+    def _color_level_name(self, level_name: str, level_no: int) -> str:
+        def default(level_name: str) -> str:
+            return str(level_name)  # pragma: no cover
+
+        func = self._level_color_format.get(level_no, default)
+        return func(level_name)
+
+    def _format_message(self, message: str) -> str:
+        return click.style(message, bold=True)
+
+    def _format_name(self, name: str) -> str:
+        return click.style(name, fg="bright_black")
+
+    def _format_trace_id(self, trace_id: str) -> str:
+        return click.style(trace_id, fg="cyan")
+
+    def _format_process_id(self, process_id: int) -> str:
+        return click.style(process_id, fg="black")
 
     def format(self, record):
-        record.levelname = self._level_color_format.get(record.levelno, "").format(
-            record.levelname
+        record_copy = copy(record)
+        record_copy.__dict__["process"] = f'PID:{getattr(record_copy, "process", 0)}'
+        if self.colored:
+            record_copy.__dict__["levelname"] = self._color_level_name(
+                level_name=record_copy.levelname, level_no=record_copy.levelno
+            )
+            record_copy.__dict__["msg"] = self._format_message(record_copy.msg)
+            record_copy.__dict__["name"] = self._format_name(record_copy.name)
+            record_copy.__dict__["process"] = self._format_process_id(
+                record_copy.process
+            )
+            if not (record_copy.trace_id == "NAN" and self.remove_nan_trace):
+                record_copy.__dict__["trace_id"] = self._format_trace_id(
+                    record_copy.trace_id
+                )
+
+        record_copy.__dict__["msg"] = (
+            self.message_splitter + record_copy.__dict__["msg"]
         )
-        record.msg = self._message_color_format.format(record.msg)
-        record.name = self._name_color_format.format(record.name)
-        record.trace_id = self._trace_id_color_format.format(
-            getattr(record, "trace_id", "NAN")
+        message = super(BasicFormatter, self).format(record_copy) + self.log_splitter
+        if self.remove_nan_trace:
+            message = message.replace("[NAN]-", "")
+        return message
+
+
+class SysLogFormatter(BasicFormatter):
+    def __init__(
+        self,
+        message_splitter: str | None = "",
+        log_splitter: str | None = "",
+        *args,
+        **kwargs,
+    ):
+        super().__init__(
+            message_splitter=message_splitter,
+            log_splitter=log_splitter,
+            *args,
+            **kwargs,
         )
-        return super(ColoredFormatter, self).format(record) + self.splitter
-
-
-class PlainFormatter(logging.Formatter):
-    def __init__(self, fmt=None, datefmt=None, style="%"):
-        super().__init__(fmt, datefmt, style)
-        self.splitter = "\n"  # To add a newline after each log message
-
-    def format(self, record):
-        # clear all color codes and msg bold
-        record.msg = record.msg.replace("\033[1m", "").replace("\033[0m", "")
-        record.levelname = (
-            record.levelname.replace("\033[94m", "")
-            .replace("\033[92m", "")
-            .replace("\033[93m", "")
-            .replace("\033[91m", "")
-            .replace("\033[95m", "")
-            .replace("\033[0m", "")
-        )
-        record.name = record.name.replace("\033[90m", "").replace("\033[0m", "")
-        return super(PlainFormatter, self).format(record) + self.splitter
-
-
-class IgnoreNANTraceFormatter(ColoredFormatter):
-    def format(self, record):
-        try:
-            message = super().format(record)
-            message = message.replace("[\033[96mNAN\033[0m]-", "")
-            return message.replace("[NAN]-", "")
-        except Exception:
-            return record.getMessage()
-
-
-class SysLogFormatter(ColoredFormatter):
-    def format(self, record):
-        try:
-            message = super().format(record)
-            return message.replace("\n", " | ")
-        except Exception:
-            return record.getMessage()
-
-
-class PlainSysLogFormatter(PlainFormatter):
-    def format(self, record):
-        try:
-            message = super().format(record)
-            return message.replace("\n", " | ")
-        except Exception:
-            return record.getMessage()
 
 
 class ApplicationLevelFilter(logging.Filter):
