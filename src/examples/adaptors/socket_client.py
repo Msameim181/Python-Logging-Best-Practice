@@ -12,7 +12,10 @@ from pydantic import BaseModel, Field
 
 logging_config = LoggingConfig(
     LoggingSettings(
-        enable_tracing=True, file_path="./log/app-client.log", enable_file_logging=True
+        enable_tracing=True,
+        file_path="./logs/app-client.log",
+        enable_file_logging=True,
+        show_process_id=True,
     )
 )
 trace_id = "123456"
