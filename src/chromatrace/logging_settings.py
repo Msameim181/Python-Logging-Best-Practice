@@ -99,6 +99,7 @@ class BasicFormatter(logging.Formatter):
     def format(self, record):
         record_copy = copy(record)
         record_copy.__dict__["process"] = f'PID:{getattr(record_copy, "process", 0)}'
+        trace_id = getattr(record_copy, "trace_id", "NAN")
         if self.colored:
             record_copy.__dict__["levelname"] = self._color_level_name(
                 level_name=record_copy.levelname, level_no=record_copy.levelno
@@ -108,10 +109,8 @@ class BasicFormatter(logging.Formatter):
             record_copy.__dict__["process"] = self._format_process_id(
                 record_copy.process
             )
-            if not (record_copy.trace_id == "NAN" and self.remove_nan_trace):
-                record_copy.__dict__["trace_id"] = self._format_trace_id(
-                    record_copy.trace_id
-                )
+            if not (trace_id == "NAN" and self.remove_nan_trace):
+                record_copy.__dict__["trace_id"] = self._format_trace_id(trace_id)
 
         record_copy.__dict__["msg"] = (
             self.message_splitter + record_copy.__dict__["msg"]
