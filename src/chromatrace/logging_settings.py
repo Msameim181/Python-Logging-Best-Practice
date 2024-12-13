@@ -1,17 +1,19 @@
 import logging
+from copy import copy
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
+import click
 from pydantic import BaseModel
 
 
 class LoggingSettings(BaseModel):
     application_level: str = ""
     log_level: str = "INFO"
-    log_format: str = "(%(asctime)s)-[%(levelname)s]-[%(name)s]-FILENAME:%(filename)s-FUNC:%(funcName)s-THREAD:%(threadName)s-LINE:%(lineno)d :: \n%(message)s"
+    log_format: str = "(%(asctime)s)-[%(levelname)s]-[%(name)s]-FILENAME:%(filename)s-FUNC:%(funcName)s-THREAD:%(threadName)s-LINE:%(lineno)d :: %(message)s"
     date_format: str = "%Y-%m-%d %H:%M:%S"
     style: str = "%"
-    file_path: Path = Path("./log/app.log")
+    file_path: Path = Path("./logs/app.log")
     max_bytes: int = 500 * 1024 * 1024  # 500MB
     backup_count: int = 3  # 3 days retention
     syslog_host: Optional[str] = None
@@ -23,6 +25,7 @@ class LoggingSettings(BaseModel):
     use_console_colored_formatter: bool = True
     use_syslog_colored_formatter: bool = False
     use_file_colored_formatter: bool = False
+    show_process_id: bool = False
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -35,6 +38,12 @@ class LoggingSettings(BaseModel):
             self.log_format = "[%(application_level)s]-" + self.log_format
         if self.enable_tracing:
             self.log_format = "[%(trace_id)s]-" + self.log_format
+        if self.show_process_id:
+            self.log_format = self.log_format.replace(
+                "(%(asctime)s)-", "(%(asctime)s)-[%(process)s]-"
+            )
+
+
 
 
 class ColoredFormatter(logging.Formatter):
