@@ -5,11 +5,8 @@ import socket
 
 from .logging_settings import (
     ApplicationLevelFilter,
-    ColoredFormatter,
-    IgnoreNANTraceFormatter,
+    BasicFormatter,
     LoggingSettings,
-    PlainFormatter,
-    PlainSysLogFormatter,
     SysLogFormatter,
 )
 from .tracer import RequestIdFilter
@@ -89,18 +86,12 @@ class LoggingConfig:
             return
 
         try:
-            if self.settings.use_syslog_colored_formatter:
-                syslog_formatter = SysLogFormatter(
-                    fmt=self.settings.log_format,
-                    datefmt=self.settings.date_format,
-                    style=self.settings.style,
-                )
-            else:
-                syslog_formatter = PlainSysLogFormatter(
-                    fmt=self.settings.log_format,
-                    datefmt=self.settings.date_format,
-                    style=self.settings.style,
-                )
+            syslog_formatter = SysLogFormatter(
+                fmt=self.settings.log_format,
+                datefmt=self.settings.date_format,
+                style=self.settings.style,
+                colored=self.settings.use_syslog_colored_formatter,
+            )
 
             # Create handler with socket handling
             syslog_handler = logging.handlers.SysLogHandler(
@@ -127,23 +118,16 @@ class LoggingConfig:
             logger.warning(f"Failed to setup syslog handler: {str(e)}")
             print(f"Failed to setup syslog handler: {str(e)}")
 
-    def _get_formatter(self, colored: bool = False):
-        if colored and self.settings.enable_tracing and self.settings.ignore_nan_trace:
-            return IgnoreNANTraceFormatter(
-                fmt=self.settings.log_format,
-                datefmt=self.settings.date_format,
-                style=self.settings.style,
-            )
-        elif colored:
-            return ColoredFormatter(
-                fmt=self.settings.log_format,
-                datefmt=self.settings.date_format,
-                style=self.settings.style,
-            )
-        return PlainFormatter(
+    def _get_formatter(
+        self,
+        colored: bool = False,
+    ):
+        return BasicFormatter(
             fmt=self.settings.log_format,
             datefmt=self.settings.date_format,
             style=self.settings.style,
+            colored=colored,
+            remove_nan_trace=self.settings.ignore_nan_trace,
         )
 
     def _setup_handlers(self, logger: logging.Logger):

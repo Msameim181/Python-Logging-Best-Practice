@@ -1,10 +1,10 @@
-name: Build and Test
+name: Test and Tag and Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
   release:
     types: [created]
 
@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build pytest pytest-cov ruff
+        pip install build pytest pytest-cov ruff toml
         pip install -r requirements.txt
         pip install -e .
     
@@ -41,11 +41,50 @@ jobs:
     - name: Build package
       run: python -m build
 
+  create-tag:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build toml
+
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build toml
+
+    - name: Get version from pyproject.toml
+      id: get_version
+      run: |
+        version=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+        echo "version=$version" >> $GITHUB_OUTPUT
+    
+    - name: Create and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release v${{ steps.get_version.outputs.version }}"
+        git push -f https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "v${{ steps.get_version.outputs.version }}"
+  
   publish:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'created'
-
+    
     steps:
     - uses: actions/checkout@v3
     
@@ -57,8 +96,14 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build twine
+        pip install build pytest pytest-cov ruff twine
+        pip install -r requirements.txt
+        pip install -e .
 
+    - name: Run tests
+      run: |
+        pytest --cov
+    
     - name: Build package
       run: python -m build
  

@@ -13,7 +13,7 @@ from chromatrace import (
     trace_id_ctx,
     tracer,
 )
-from chromatrace.logging_settings import IgnoreNANTraceFormatter
+from chromatrace.logging_settings import ApplicationLevelFilter, BasicFormatter
 from chromatrace.tracer import RequestIdFilter
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -104,12 +104,14 @@ class TestTracerDecorator:
 
 class TestFormatters:
     @pytest.fixture(scope="class")
-    def settings(self):
-        return LoggingSettings(
-            application_level="TestFormatters",
-            enable_console_logging=True,
-            enable_tracing=True,
-            ignore_nan_trace=True,
+    def config(self):
+        return LoggingConfig(
+            LoggingSettings(
+                application_level="TestFormatters",
+                enable_console_logging=False,
+                enable_tracing=True,
+                ignore_nan_trace=True,
+            )
         )
 
     @pytest.fixture
@@ -117,20 +119,23 @@ class TestFormatters:
         return StringIO()
 
     @pytest.fixture
-    def logger(self, settings, stream):
+    def logger(self, config, stream):
         # Clear all existing loggers
-        config = LoggingConfig(settings)
         logger = config.get_logger("formatter-test")
 
         # Add StreamHandler directly to logger
         handler = logging.StreamHandler(stream)
         handler.setFormatter(
-            IgnoreNANTraceFormatter(
-                fmt=settings.log_format,
-                datefmt=settings.date_format,
-                style=settings.style,
+            BasicFormatter(
+                fmt=config.settings.log_format,
+                datefmt=config.settings.date_format,
+                style=config.settings.style,
+                colored=True,
+                remove_nan_trace=True,
             )
         )
+        handler.addFilter(RequestIdFilter())
+        handler.addFilter(ApplicationLevelFilter(config.settings.application_level))
         logger.addHandler(handler)
         return logger
 
@@ -144,10 +149,10 @@ class TestFormatters:
         assert "test-id" in output
 
     def test_ignore_nan_trace(self, logger, stream):
+        trace_id_ctx.set("NAN")
         logger.info("Test message with no trace...")
-        assert "NAN" not in logger.handlers[0].format(
-            logging.LogRecord("", 0, "", 0, "msg", (), None)
-        )
+        output = stream.getvalue()
+        assert "NAN" not in output, "NAN trace should be removed"
 
 
 class TestContextManagement:

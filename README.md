@@ -13,7 +13,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/chromatrace.svg)]()
 
 
-Chromatrace is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
+Chromatrace is a Python package designed for advanced logging capabilities, including trace and request ID management along with process ID. It provides a flexible logging configuration and supports colored logging for better visibility.
 
 I believe that logging is an essential part of any application, and it is crucial to have a well-organized and structured logging system. Chromatrace aims to provide a simple and easy-to-use logging system that can be integrated into any Python application.
 In simple terms, Chromatrace is a Best Practice of Logging in Python.
@@ -23,8 +23,13 @@ In simple terms, Chromatrace is a Best Practice of Logging in Python.
 - Configurable logging settings using Pydantic.
 - Customizable log levels and loggers for different services.
 - Support for trace IDs and request IDs.
+- Support for process IDs.
 - Customizable log formats and handlers.
 - Asynchronous and synchronous function tracing.
+- Uvicorn integration for logging configuration to customize log settings.
+- FastAPI integration for request ID management.
+- SocketIO integration for request ID management.
+- Practical examples for different frameworks and use cases.
 
 ## Installation
 
@@ -76,13 +81,13 @@ container = Container()
 
 from chromatrace import LoggingConfig, LoggingSettings
 
-container[LoggingSettings] = LoggingSettings()
-container[LoggingConfig] = LoggingConfig(
-    container[LoggingSettings], 
-    application_level='Development', 
-    enable_tracing=True, 
-    ignore_nan_trace=True
-)
+container[LoggingSettings] = LoggingSettings(
+        application_level="Development",
+        enable_tracing=True,
+        ignore_nan_trace=False,
+        enable_file_logging=True,
+    )
+container[LoggingConfig] = LoggingConfig(container[LoggingSettings])
 ```
 
 Then, add the `LoggingConfig` to your service:
@@ -193,6 +198,48 @@ Received message on main namespace. SID: FI3E_S_A-KsTi4RLAAAD, Message: Hello fr
 ```
 
 Yes, the socket logs are also within the trace. The trace ID - `S-4e2b7c5e` and `S-aaf46528` was added to the log messages. For better experience, the prefix `S` was added to the trace ID to differentiate it from the request ID.
+
+
+### Uvicorn Integration
+
+```python
+from chromatrace.uvicorn import GetLoggingConfig, UvicornLoggingSettings
+
+rest_application = FastAPI()
+
+uvicorn.run(
+    rest_application,
+    host="0.0.0.0",
+    port=8000,
+    log_level="debug",
+    log_config=GetLoggingConfig(
+        UvicornLoggingSettings(
+            enable_file_logging=True,
+            show_process_id=True,
+        )
+    ),
+)
+```
+
+Result:
+```log
+(2024-12-12 20:54:54)-[PID:3710345]-[INFO]: Started server process [3710345]
+(2024-12-12 20:54:54)-[PID:3710345]-[INFO]: Waiting for application startup.
+(2024-12-12 20:54:54)-[PID:3710345]-[INFO]: Application startup complete.
+(2024-12-12 20:54:54)-[PID:3710345]-[INFO]: Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+(2024-12-12 20:54:57)-[PID:3710345]-[INFO]: ADDRESS:(127.0.0.1:46166) - REQUEST:"GET /consume HTTP/1.1" - STATUS:200 OK
+(2024-12-12 20:55:45)-[PID:3710345]-[INFO]: ADDRESS:(127.0.0.1:54018) - REQUEST:"GET /consume HTTP/1.1" - STATUS:200 OK
+(2024-12-12 20:56:51)-[PID:3710345]-[INFO]: ADDRESS:(127.0.0.1:58240) - REQUEST:"GET / HTTP/1.1" - STATUS:200 OK
+(2024-12-12 20:56:51)-[PID:3710345]-[INFO]: ADDRESS:(127.0.0.1:58254) - REQUEST:"GET / HTTP/1.1" - STATUS:200 OK
+(2024-12-12 20:56:52)-[PID:3710345]-[INFO]: ADDRESS:(127.0.0.1:58260) - REQUEST:"GET / HTTP/1.1" - STATUS:200 OK
+(2024-12-12 20:56:52)-[PID:3710345]-[INFO]: ADDRESS:(127.0.0.1:58270) - REQUEST:"GET / HTTP/1.1" - STATUS:200 OK
+(2024-12-12 21:16:45)-[PID:3710345]-[INFO]: Shutting down
+(2024-12-12 21:16:45)-[PID:3710345]-[INFO]: Waiting for application shutdown.
+(2024-12-12 21:16:45)-[PID:3710345]-[INFO]: Application shutdown complete.
+(2024-12-12 21:16:45)-[PID:3710345]-[INFO]: Finished server process [3710345]
+```
+
+The logs are within the process ID - `PID:3710345` was added to the log messages. The log messages are also colored for better visibility. The log messages are also written to the file if the `enable_file_logging` is set to `True`. For more information, check the [config.py](src/chromatrace/uvicorn/config.py) file, `UvicornLoggingSettings` class.
 
 
 ## Examples
