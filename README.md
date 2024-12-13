@@ -13,7 +13,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/chromatrace.svg)]()
 
 
-Chromatrace is a Python package designed for advanced logging capabilities, including trace and request ID management. It provides a flexible logging configuration and supports colored logging for better visibility.
+Chromatrace is a Python package designed for advanced logging capabilities, including trace and request ID management along with process ID. It provides a flexible logging configuration and supports colored logging for better visibility.
 
 I believe that logging is an essential part of any application, and it is crucial to have a well-organized and structured logging system. Chromatrace aims to provide a simple and easy-to-use logging system that can be integrated into any Python application.
 In simple terms, Chromatrace is a Best Practice of Logging in Python.
@@ -23,8 +23,13 @@ In simple terms, Chromatrace is a Best Practice of Logging in Python.
 - Configurable logging settings using Pydantic.
 - Customizable log levels and loggers for different services.
 - Support for trace IDs and request IDs.
+- Support for process IDs.
 - Customizable log formats and handlers.
 - Asynchronous and synchronous function tracing.
+- Uvicorn integration for logging configuration to customize log settings.
+- FastAPI integration for request ID management.
+- SocketIO integration for request ID management.
+- Practical examples for different frameworks and use cases.
 
 ## Installation
 
