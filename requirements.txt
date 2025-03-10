@@ -3,9 +3,8 @@ django==5.1.1
 lagom==2.6.0
 pydantic==2.9.2
 fastapi==0.100.0
-socketio==0.2.1
-python-socketio==5.11.4
-python-socketio[client]==5.11.4
+python-socketio==5.12.1
+python-socketio[client]==5.12.1
 pytest==8.3.3
 pytest-asyncio==0.24.0
 pytest-cov==6.0.0
