@@ -149,10 +149,11 @@ The two first log was out of trace and the trace ID was not added to the log mes
 ### FastAPI Integration
 
 ```python
-from chromatrace import RequestIdMiddleware
+from chromatrace.fastapi import RequestIdMiddleware as FastAPIRequestIdMiddleware
+from chromatrace.django import RequestIdMiddleware as DjangoRequestIdMiddleware
 
 app = FastAPI()
-app.add_middleware(RequestIdMiddleware)
+app.add_middleware(FastAPIRequestIdMiddleware)
 ```
 
 Result:
@@ -176,7 +177,7 @@ As you can see, the request ID - `R-ffe0a9a2` is automatically added to the log 
 ### SocketIO Integration
 
 ```python
-from chromatrace import SocketRequestIdMiddleware
+from chromatrace.socketio import SocketRequestIdMiddleware
 
 socket_application = SocketRequestIdMiddleware(socket_application)
 ```
