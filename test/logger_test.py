@@ -11,7 +11,7 @@ from chromatrace import (
     trace_id_ctx,
     tracer,
 )
-from chromatrace.fastapi import FastAPIRequestIdMiddleware as FastAPIMiddleware
+from chromatrace.fastapi import FastAPIMiddleware
 from chromatrace.logging_settings import ApplicationLevelFilter, BasicFormatter
 from chromatrace.socketio import SocketRequestIdMiddleware
 from chromatrace.tracer import RequestIdFilter
