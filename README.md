@@ -272,7 +272,7 @@ Now, check the logs in the both terminal.
 
 ## License
 
-This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Ideas and Sources
 
