@@ -132,7 +132,6 @@ class SysLogFormatter(BasicFormatter):
         super().__init__(
             message_splitter=message_splitter,
             log_splitter=log_splitter,
-            *args,
             **kwargs,
         )
 

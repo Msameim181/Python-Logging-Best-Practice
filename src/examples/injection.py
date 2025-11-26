@@ -1,8 +1,9 @@
-from chromatrace import LoggingSettings
 from dependency import container
 from frameworks.api_app import APIService
 from frameworks.socket_app import SocketService
 from lagom import Singleton
+
+from chromatrace import LoggingSettings
 
 container[LoggingSettings] = LoggingSettings(
     application_level="Development",

@@ -1,12 +1,13 @@
 import multiprocessing
 
 import uvicorn
-from chromatrace import LoggingConfig
-from chromatrace.fastapi import RequestIdMiddleware
-from chromatrace.uvicorn import GetLoggingConfig, UvicornLoggingSettings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from usecases import AnotherSample, ExampleService
+
+from chromatrace import LoggingConfig
+from chromatrace.fastapi import RequestIdMiddleware
+from chromatrace.uvicorn import GetLoggingConfig, UvicornLoggingSettings
 
 
 class APIService:
