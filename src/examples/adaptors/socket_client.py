@@ -6,9 +6,10 @@ import time
 from typing import Dict, List, Optional
 
 import socketio
+from pydantic import BaseModel, Field
+
 from chromatrace import LoggingConfig, LoggingSettings
 from chromatrace.tracer import trace_id_ctx
-from pydantic import BaseModel, Field
 
 logging_config = LoggingConfig(
     LoggingSettings(

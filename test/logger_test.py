@@ -4,6 +4,9 @@ import os
 from io import StringIO
 
 import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
 from chromatrace import (
     LoggingConfig,
     LoggingSettings,
@@ -15,8 +18,6 @@ from chromatrace.fastapi import RequestIdMiddleware as FastAPIMiddleware
 from chromatrace.logging_settings import ApplicationLevelFilter, BasicFormatter
 from chromatrace.socketio import SocketRequestIdMiddleware
 from chromatrace.tracer import RequestIdFilter
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
 
 
 class TestLoggingConfiguration:

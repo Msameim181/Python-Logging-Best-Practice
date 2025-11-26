@@ -3,6 +3,7 @@ import multiprocessing
 
 import socketio
 import uvicorn
+
 from chromatrace import (
     LoggingConfig,
 )

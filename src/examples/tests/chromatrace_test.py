@@ -4,12 +4,13 @@ import threading
 import injection  # noqa
 import pytest
 from adaptors.socket_client import SocketClient, SocketClientConfig
-from chromatrace import LoggingConfig
 from dependency import container
 from frameworks.api_app import APIService
 from frameworks.socket_app import SocketService
 from usecases.example_service import ExampleService, InnerService
 from usecases.sample import AnotherSample
+
+from chromatrace import LoggingConfig
 
 
 class TestChromatrace:
