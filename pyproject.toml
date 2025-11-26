@@ -21,7 +21,6 @@ classifiers = [
     "Topic :: System :: Logging",
 ]
 dependencies = [
-    "asyncio>=3.4.3",
     "lagom>=2.6.0",
     "pydantic>=2.9.2",
     "fastapi>=0.100.0",
