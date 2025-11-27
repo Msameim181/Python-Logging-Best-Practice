@@ -40,12 +40,25 @@ class LoggingConfig:
         # Add handlers if they don't exist
         if not logger.handlers:
             self._setup_handlers(logger)
+            self._setup_custom_handlers(logger)
 
         return logger
 
+    def _setup_custom_handlers(self, logger: logging.Logger):
+        if not hasattr(self.settings, "custom_handlers"):
+            return
+
+        for handler in self.settings.custom_handlers:
+            if not isinstance(handler, logging.Handler):
+                continue
+            formatter = self._get_formatter(
+                colored=self.settings.use_console_colored_formatter
+            )
+            self._set_logger_settings(handler, formatter, logger)
+
     def _set_logger_settings(
         self,
-        handler: logging.handlers,
+        handler: logging.Handler,
         formatter: logging.Formatter,
         logger: logging.Logger,
     ):
