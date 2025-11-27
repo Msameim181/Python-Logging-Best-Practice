@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Literal, Optional
 
 import click
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class LoggingSettings(BaseModel):
@@ -26,6 +26,7 @@ class LoggingSettings(BaseModel):
     use_syslog_colored_formatter: bool = False
     use_file_colored_formatter: bool = False
     show_process_id: bool = False
+    custom_handlers: list = Field(default_factory=list)
 
     def __init__(self, **data):
         super().__init__(**data)
