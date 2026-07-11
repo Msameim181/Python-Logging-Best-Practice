@@ -2,12 +2,13 @@ import asyncio
 import sys
 
 import injection  # noqa
-from chromatrace import LoggingConfig, LoggingSettings, tracer
 from dependency import container
 from frameworks.api_app import APIService
 from frameworks.socket_app import SocketService
 from usecases.example_service import ExampleService
 from usecases.sample import AnotherSample
+
+from chromatrace import LoggingConfig, LoggingSettings, tracer
 
 sys.stdout.reconfigure(encoding="utf-8")
 

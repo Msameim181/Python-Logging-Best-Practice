@@ -3,12 +3,12 @@ import multiprocessing
 
 import socketio
 import uvicorn
+
 from chromatrace import (
-    GetLoggingConfig,
     LoggingConfig,
-    SocketRequestIdMiddleware,
-    UvicornLoggingSettings,
 )
+from chromatrace.socketio import SocketRequestIdMiddleware
+from chromatrace.uvicorn import GetLoggingConfig, UvicornLoggingSettings
 
 
 class SocketServerConfig:
